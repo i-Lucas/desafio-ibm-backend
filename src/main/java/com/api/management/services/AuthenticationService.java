@@ -19,7 +19,7 @@ import java.util.Date;
 @Service
 public class AuthenticationService {
 
-    private final String SECRET_KEY = "your-secret-key";
+    private final String SECRET_KEY = "I_LOVE_JAVA";
 
     public String generateToken(String email) {
 

@@ -27,7 +27,7 @@ public class AuthController {
         return this.userService.signin(userDto);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/details")
     public ResponseEntity<?> getUserDetails(@RequestHeader("Authorization") String token) {
         return userService.getUserEmailByToken(token);
     }
