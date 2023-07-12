@@ -25,7 +25,7 @@ public class UserService {
     public ResponseEntity<Object> signup(UserDto userDto) {
 
         if (this.checkEmailAlreadyRegistered(userDto.getEmail())) {
-            return this.getResponseEntityObject(HttpStatus.CONFLICT, "E-mail already exists.", "error");
+            return this.getResponseEntityObject(HttpStatus.CONFLICT, "E-mail already exists.", "message");
         }
 
         var hashPassword = authService.hashPassword(userDto.getPassword());
@@ -39,7 +39,7 @@ public class UserService {
         UserModel user = userRepository.findByEmail(userDto.getEmail());
 
         if (user == null || !this.validateUserPassword(userDto, user)) {
-            return this.getResponseEntityObject(HttpStatus.UNAUTHORIZED, "Invalid email or password.", "error");
+            return this.getResponseEntityObject(HttpStatus.UNAUTHORIZED, "Invalid email or password.", "message");
         }
 
         int minutes = 60;
