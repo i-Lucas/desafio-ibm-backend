@@ -1,4 +1,4 @@
-package com.api.management.exceptions;
+package com.api.management.exceptions.handler;
 
 import org.springframework.http.HttpStatus;
 

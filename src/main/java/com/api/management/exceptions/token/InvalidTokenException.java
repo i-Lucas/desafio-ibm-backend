@@ -1,6 +1,8 @@
-package com.api.management.exceptions;
+package com.api.management.exceptions.token;
 
 import org.springframework.http.HttpStatus;
+
+import com.api.management.exceptions.handler.IGlobalExceptionStatusMapping;
 
 public class InvalidTokenException extends RuntimeException implements IGlobalExceptionStatusMapping {
 
