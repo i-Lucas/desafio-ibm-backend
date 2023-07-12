@@ -48,7 +48,7 @@ public class UserService {
         }
 
         var token = this.authService.generateToken(user.getEmail());
-        return this.getResponseEntityObject(HttpStatus.CREATED, token, "token");
+        return this.getResponseEntityObject(HttpStatus.OK, token, "token");
     }
 
     public ResponseEntity<Object> getUserEmailByToken(String token) {
