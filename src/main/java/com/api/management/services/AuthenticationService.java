@@ -8,6 +8,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import org.springframework.stereotype.Service;
 
+import com.api.management.exceptions.InvalidTokenException;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -36,7 +38,7 @@ public class AuthenticationService {
             return claims.getBody().getSubject();
 
         } catch (JwtException e) {
-            throw new IllegalArgumentException("Invalid token.");
+            throw new InvalidTokenException();
         }
     }
 
