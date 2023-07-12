@@ -11,6 +11,7 @@ import com.api.management.services.UserService;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
