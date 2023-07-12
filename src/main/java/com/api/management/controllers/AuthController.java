@@ -29,7 +29,7 @@ public class AuthController {
 
     @GetMapping("/user/details")
     public ResponseEntity<?> getUserDetails(@RequestHeader("Authorization") String token) {
-        return userService.getUserEmailByToken(token);
+        return userService.getUserDetails(token);
     }
 
 }
