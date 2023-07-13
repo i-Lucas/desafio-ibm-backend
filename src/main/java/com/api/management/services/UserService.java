@@ -1,7 +1,10 @@
 package com.api.management.services;
 
+import com.api.management.dtos.CandidateResponseDto;
 import com.api.management.dtos.UserDto;
+import com.api.management.exceptions.user.UserAlreadyExistsException;
 import com.api.management.exceptions.user.UserNotFoundException;
+import com.api.management.models.CandidateModel;
 import com.api.management.models.UserModel;
 import com.api.management.repositories.UserRepository;
 
@@ -10,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -25,7 +30,9 @@ public class UserService {
     public ResponseEntity<Object> signup(UserDto userDto) {
 
         if (this.checkEmailAlreadyRegistered(userDto.getEmail())) {
-            return this.getResponseEntityObject(HttpStatus.CONFLICT, "E-mail already exists.", "message");
+            // return this.getResponseEntityObject(HttpStatus.CONFLICT, "E-mail already
+            // exists.", "message");
+            throw new UserAlreadyExistsException();
         }
 
         var hashPassword = authService.hashPassword(userDto.getPassword());
@@ -42,7 +49,7 @@ public class UserService {
             return this.getResponseEntityObject(HttpStatus.UNAUTHORIZED, "Invalid email or password.", "message");
         }
 
-        int minutes = 60;
+        int minutes = 360;
         var token = this.authService.generateToken(user.getEmail(), minutes);
         return this.getResponseEntityObject(HttpStatus.OK, token, "token");
     }
@@ -54,7 +61,27 @@ public class UserService {
 
         response.put("email", user.getEmail());
         response.put("id", user.getId().toString());
+        response.put("candidates", getCandidateInfo(user.getCandidates()));
         return ResponseEntity.ok(response);
+    }
+
+    private List<CandidateResponseDto> getCandidateInfo(List<CandidateModel> candidates) {
+        List<CandidateResponseDto> candidateInfo = new ArrayList<>();
+
+        for (CandidateModel candidate : candidates) {
+            var dto = new CandidateResponseDto();
+            dto.setId(candidate.getId());
+            dto.setName(candidate.getName());
+            dto.setEmail(candidate.getEmail());
+            dto.setStatus(candidate.getStatus());
+            candidateInfo.add(dto);
+        }
+
+        return candidateInfo;
+    }
+
+    public List<CandidateModel> getAllCandidatesForUser(UserModel user) {
+        return userRepository.findAllCandidatesByUser(user);
     }
 
     private ResponseEntity<Object> getResponseEntityObject(HttpStatus status, String message, String type) {
@@ -70,7 +97,7 @@ public class UserService {
         return authService.validatePassword(userDto.getPassword(), user.getPassword());
     }
 
-    private UserModel getUserByToken(String token) {
+    public UserModel getUserByToken(String token) {
 
         String jwtToken = token.substring(7);
         String email = authService.extractEmailFromToken(jwtToken);
