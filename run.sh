@@ -8,5 +8,5 @@ fi
 if [ "$1" = "-test" ]; then
   mvn test
 else
-   cd target/ && java -jar management-0.0.1-SNAPSHOT.jar
+  cd target/ && nohup java -jar management-0.0.1-SNAPSHOT.jar >/dev/null 2>&1 &
 fi
